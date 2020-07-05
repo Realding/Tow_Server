@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+<!-- 载入静态文件 -->
+{% load staticfiles %}
+{% block title %}准备{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col">
+            <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th>用户名</th>
+                    <th>准备状态</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody">
+                {% for player in players %}
+                    <tr>
+                        <td width="60%">{{ player.user.username }}</td>
+                        <td width="40%">
+                            {% if player.ready %}
+                                <span class="badge badge-success">准备</span>
+                            {% else %}
+                                <span class="badge badge-warning">未准备</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <a href="/be_ready/" id="ready_button" class="btn btn-sm btn-success" style="width:45% ;">准备</a>
+            <a href="/index/?back=true" class="btn btn-sm btn-primary" style="width:45% ;float: right;">返回</a>
+        </div>
+        <div class="col" style=" margin-top:15px ;text-align: center"><a id="enter" href="/wait/" class="btn disabled btn-info" style="width:100% ;">进入游戏</a></div>
+
+    </div>
+    <script>
+        $(document).ready(function(){
+            function refresh(){
+                $.getJSON("/ajax_get_ready_data/", function (ret) {
+                    $('#tbody').empty();
+                    var allready=true;
+                    $.each(ret, function(key, value){
+                        if(key !== 'username') {
+                            var ready_txt;
+                            if (value === true) {
+                                ready_txt = "<span class=\"badge badge-success\">准备</span>";
+                                if (key === ret['username']) {
+
+                                    $('#ready_button').html( "取消准备");
+                                }
+                            } else {
+                                allready=false;
+
+                                ready_txt = "<span class=\"badge badge-warning\">未准备</span>";
+                                if(key === ret['username']) {
+                                    $('#ready_button').html( "准备");
+                                }
+                            }
+
+                            var txt = "                   <tr>\n" +
+                                "                        <td width=\"60%\">" + key + "</td>\n" +
+                                "                        <td width=\"40%\">\n" + ready_txt + "</td>\n" +
+                                "                    </tr>";
+
+                            $('#tbody').append(txt);
+                        }
+                    });
+
+                    if(allready && Object.keys(ret).length >=3){
+                        {#alert(allready);#}
+                        $('#enter').removeClass('disabled');
+                    }else {
+                        $('#enter').addClass('disabled');
+                    }
+                })
+            }
+            setInterval(refresh, 1000)
+        })
+    </script>
+
+{% endblock %}

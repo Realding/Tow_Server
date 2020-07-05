@@ -1,0 +1,53 @@
+{# templates/base.html#}
+
+<!-- 载入静态文件 -->
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<!-- 网站主语言 -->
+<html lang="zh-cn">
+
+<head>
+    <!-- 网站采用的字符编码 -->
+    <meta charset="utf-8">
+    <!-- 预留网站标题的位置 -->
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <!-- popper.min.js 用于弹窗、提示、下拉菜单 -->
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    {% block css %}{% endblock %}
+</head>
+
+<body>
+
+<div>
+        <div class="navbar navbar-expand bg-light" id="my-nav">
+            <!-- Nav tabs -->
+            <a class="navbar-brand " href="#">Tug-Of-War</a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="nav navbar-nav ">
+                    {% if request.session.is_login %}
+                    <li class="nav-item"><a class="nav-link" href="#">当前在线：{{ request.session.user_name }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout/">注销</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="/login/">登录</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register/">注册</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div><!-- /.navbar-collapse -->
+
+</div>
+
+    <!-- 预留具体页面的位置 -->
+    {% block content %}{% endblock content %}
+    <!-- 引入注脚 -->
+{#    {% include 'footer.html' %}#}
+
+</body>
+
+</html>

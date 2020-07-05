@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+<!-- 载入静态文件 -->
+{% load staticfiles %}
+{% block title %}POST发送{% endblock %}
+{% block content %}
+    <div class="container">
+        <form action="/dataport/" method="post">
+            <div class="form-group">
+                <label for="usr">摇一摇次数:</label>
+                <input type="number" class="form-control" name="shake_times">
+                <button type="submit" class="btn btn-primary">发送</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
